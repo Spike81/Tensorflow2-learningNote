@@ -701,3 +701,43 @@ print(tf.tile(a, [2,2]))  # tf.Tensor(
  [2 3 2 3]], shape=(4, 4), dtype=int32)
 ```
 
+## 张量限幅
+### tf.clip_by_value
+可以对 tensor 值的大小进行限制
+```python
+a = tf.range(10)
+print(a)  # tf.Tensor([0 1 2 3 4 5 6 7 8 9], shape=(10,), dtype=int32)
+
+print(tf.maximum(a,2))  # tf.Tensor([2 2 2 3 4 5 6 7 8 9], shape=(10,), dtype=int32)
+
+print(tf.minimum(a,8))  # tf.Tensor([0 1 2 3 4 5 6 7 8 8], shape=(10,), dtype=int32)
+
+print(tf.clip_by_value(a, 2, 8))  # tf.Tensor([2 2 2 3 4 5 6 7 8 8], shape=(10,), dtype=int32)
+```
+### relu
+relu 可以将小于 0 的值变为 0
+```python
+a = tf.range(10) - 5
+print(a)  # tf.Tensor([-5 -4 -3 -2 -1  0  1  2  3  4], shape=(10,), dtype=int32)
+
+print(tf.nn.relu(a))  # tf.Tensor([0 0 0 0 0 0 1 2 3 4], shape=(10,), dtype=int32)
+
+print(tf.maximum(a, 0))  # tf.Tensor([0 0 0 0 0 0 1 2 3 4], shape=(10,), dtype=int32)
+```
+### clip_by_norm
+在处理 梯度 时，可以使用此方法来等比缩小 梯度
+```python
+a = tf.random.normal([2,2], mean=10)
+print(a)  # tf.Tensor(
+[[ 8.094089   9.236106 ]
+ [ 7.0806246 10.619143 ]], shape=(2, 2), dtype=float32)
+ 
+print(tf.norm(a))  # tf.Tensor(17.712181, shape=(), dtype=float32)
+
+aa = tf.clip_by_norm(a, 15)
+print(aa)  # tf.Tensor(
+[[6.85468   7.821826 ]
+ [5.9964023 8.993084 ]], shape=(2, 2), dtype=float32)
+ 
+print(tf.norm(aa))  # tf.Tensor(15.0, shape=(), dtype=float32)
+```
