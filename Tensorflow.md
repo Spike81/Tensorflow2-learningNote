@@ -741,3 +741,48 @@ print(aa)  # tf.Tensor(
  
 print(tf.norm(aa))  # tf.Tensor(15.0, shape=(), dtype=float32)
 ```
+### clip_by_global_norm
+神经网络里可能有多个参数，clip_by_global_norm 可以等比例的将其进行变化
+
+## 高阶操作
+### where
+当传入一个参数，where 可以返回元素为 True 的坐标；当传入三个参数，where 会根据 mask，True 则选取 A 相应位置的元素，False 则选取 B 相应位置的元素
+```python
+a = tf.random.normal([3,3])
+mask = a > 0
+print(mask)  # tf.Tensor(
+[[False  True False]
+ [False  True False]
+ [False  True  True]], shape=(3, 3), dtype=bool)
+
+b = tf.boolean_mask(a, mask)
+index = tf.where(mask)
+print(index)  # tf.Tensor(
+[[0 1]
+ [1 1]
+ [2 1]
+ [2 2]], shape=(4, 2), dtype=int64)
+
+tf.gather_nd(a, index)
+```
+```python
+mask = tf.cast(tf.constant([[1, 1],
+                   [0, 1]]), tf.bool)
+A = tf.random.normal([2,2])
+B = tf.zeros([2,2])
+
+print(tf.where(mask,A,B))  # tf.Tensor(
+[[ 1.1859536  -2.195564  ]
+ [ 0.         -0.00526483]], shape=(2, 2), dtype=float32)
+```
+
+### scatter_nd
+scatter_nd 有三个参数：indices，updates，shape。会根据 shape 生成一个元素全为 0 的 底板，根据 indices 将 updates 上的数据更新到 底板 上
+```python
+indices = tf.constant([[4],[3],[1],[7]])
+updates = tf.constant([9,8,11,12])
+shape = tf.constant([8])
+
+a = tf.scatter_nd(indices, updates, shape)
+print(a)  # tf.Tensor([ 0 11  0  8  9  0  0 12], shape=(8,), dtype=int32)
+```
