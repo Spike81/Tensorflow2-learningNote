@@ -786,3 +786,11 @@ shape = tf.constant([8])
 a = tf.scatter_nd(indices, updates, shape)
 print(a)  # tf.Tensor([ 0 11  0  8  9  0  0 12], shape=(8,), dtype=int32)
 ```
+### meshgrid
+可以根据要求，在指定区域内，进行指定数量的采样
+```python
+y = tf.linspace(-2., 2, 5)  # 在 -2 和 2 直接进行采样，采样 5 个点
+x = tf.linspace(-2., 2, 5)
+point_x, point_y = tf.meshgrid(x,y)
+print(point_x.shape)  # (5, 5)
+```

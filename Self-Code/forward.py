@@ -19,9 +19,13 @@ tf.config.experimental.set_virtual_device_configuration(
 from tensorflow import keras
 from tensorflow.keras import datasets
 
-(x, y), _ = datasets.mnist.load_data()  # ([60k, 28, 28], [60k])
+(x, y), (x_test, y_test) = datasets.mnist.load_data()  # ([60k, 28, 28], [60k])
 x = tf.convert_to_tensor(x, dtype=tf.float32) / 255.
 y = tf.convert_to_tensor(y, dtype=tf.int32)
+
+x_test = tf.convert_to_tensor(x_test, dtype=tf.float32) / 255.
+y_test = tf.convert_to_tensor(y_test, dtype=tf.int32)
+
 
 # print(x.shape, y.shape)
 # print(tf.reduce_min(x), tf.reduce_max(x), tf.reduce_min(y), tf.reduce_max(y))
@@ -30,6 +34,10 @@ train_db = tf.data.Dataset.from_tensor_slices((x, y)).batch(128)
 train_iter = iter(train_db)
 sample = next(train_iter)
 # print("batch:", sample[0].shape, sample[1].shape)  # batch: (128, 28, 28) (128,)
+
+test_db = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(128)
+test_iter = iter(test_db)
+sample_test = next(test_iter)
 
 # [b, 784] => ... => [b, 10]
 # w.shape = [dim_in, dim_out]
@@ -42,7 +50,7 @@ b2 = tf.Variable(tf.zeros([128]))
 w3 = tf.Variable(tf.random.truncated_normal([128, 10], stddev=0.1))
 b3 = tf.Variable(tf.zeros([10]))
 
-lr = 1e-4
+lr = 1e-3
 
 for epoch in range(10):
 
@@ -82,3 +90,30 @@ for epoch in range(10):
 
         if step % 100 == 0:
             print("epoch", epoch, "step", step, "loss:", float(loss))
+
+
+    # test
+    totalcorrect = 0
+    totalnum = 0
+
+    for step, (x, y) in enumerate(test_db):
+
+        x = tf.reshape(x, [-1, 28*28])
+
+        h1 = tf.nn.relu(x @ w1 + b1)
+        h2 = tf.nn.relu(h1 @ w2 + b2)
+        out = h2 @ w3 + b3
+
+        prob = tf.math.softmax(out, axis=1)
+        pred = tf.argmax(prob, axis=1)
+        pred = tf.cast(pred, dtype=tf.int32)
+
+        correct = tf.cast(tf.equal(pred, y), dtype=tf.int32)
+        correct = tf.reduce_sum(correct)
+
+        totalcorrect += int(correct)
+        totalnum += x.shape[0]
+
+    acc = totalcorrect / totalnum
+    print("acc: ", acc)
+

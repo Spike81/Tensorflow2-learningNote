@@ -19,9 +19,7 @@ tf.config.experimental.set_virtual_device_configuration(
 import numpy as np
 from math import e
 
-indices = tf.constant([[4],[3],[1],[7]])
-updates = tf.constant([9,8,11,12])
-shape = tf.constant([8])
-
-a = tf.scatter_nd(indices, updates, shape)
-print(a)  # tf.Tensor([ 0 11  0  8  9  0  0 12], shape=(8,), dtype=int32)
+y = tf.linspace(-2, 2, 5)  # 在 -2 和 2 直接进行采样，采样 5 个点
+x = tf.linspace(-2, 2, 5)
+point_x, point_y = tf.meshgrid(x,y)
+print(point_y.shape)
