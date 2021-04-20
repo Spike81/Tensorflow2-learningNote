@@ -50,3 +50,4 @@ for step in range(200):# 循环优化
     if step % 20 == 19:
         print ('step {}: x = {}, f(x) = {}'
                .format(step, x.numpy(), y.numpy()))
+print(himmelblau(x).numpy())
