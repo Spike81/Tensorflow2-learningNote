@@ -19,6 +19,7 @@ tf.config.experimental.set_virtual_device_configuration(
 from tensorflow import keras
 from tensorflow.keras import layers, datasets, optimizers, Sequential, metrics
 
+
 def process(x, y):
     '''
     preprocess data
@@ -33,6 +34,7 @@ def iter_db(db):
     db = iter(db)
     simple = next(db)
     print(simple[0].shape, simple[1].shape)
+
 
 # [60k, 28, 28] [60k], [10k, 28, 28] [20k]
 (x, y), (x_, y_) = datasets.fashion_mnist.load_data()
@@ -60,6 +62,11 @@ model = Sequential([
 model.build(input_shape=[None, 28*28])
 model.summary()
 optimizers = optimizers.Adam(lr=0.001)
+
+sample_img = next(iter(train_db))[0]
+sample_img = sample_img[0]
+sample_img = tf.reshape(sample_img, [1, 28, 28, 1])
+
 
 for epoch in range(10):
 
@@ -99,7 +106,6 @@ for epoch in range(10):
 
     acc = correctNum / num
     print("epoch:", epoch, "acc:", float(acc))
-
 
 
 

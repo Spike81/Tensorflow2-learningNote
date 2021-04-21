@@ -794,3 +794,74 @@ x = tf.linspace(-2., 2, 5)
 point_x, point_y = tf.meshgrid(x,y)
 print(point_x.shape)  # (5, 5)
 ```
+
+## loss
+loss_mse = tf.reduce_mean(tf.losses.MSE(y, logits))
+loss_ce = tf.reduce_mean(tf.losses.categorical_crossentropy(y, logits, from_logits=True))
+
+## 可视化
+### tensorBoard
+1，如果没有，先 install，使用 "pip install tensorboard"
+2，进入目标路径，建立一个 "logs'' 文件夹
+3，使用 "tensorboard --logdir logs"，之后会出现网站
+4，在代码中添加
+```python
+current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+log_dir = "logs/" + current_time
+summary_writer = tf.summary.create_file_writer(log_dir)
+
+with summary_writer.as_default():
+    tf.summary.scalar("loss", float(loss_cs), step=epoch)
+    tf.summary.scalar("acc", float(acc), step=epoch)
+```
+5，之后就可以在网站中看到训练结果
+
+上面这个是显示 loss 和 accuray 的结果，如果想显示图片，可以使用以下代码
+```python
+sample_img = next(iter(train_db))[0]
+sample_img = sample_img[0]
+sample_img = tf.reshape(sample_img, [1, 28, 28, 1])
+
+with summary_writer.as_default():
+    tf.summary.image("train example", sample_img, step=0)
+```
+这样可以显示单张图片，如果想显示多张图片，可以使用以下代码
+```python
+val_images = x[:25]
+val_images = tf.reshape(val_images, [-1, 28, 28, 1])
+
+with summary_writer.as_default():
+	tf.summary.scalar("test-acc", float(loss_cs), step=step)
+	tf.summary.image("val-onebyone-images", val_images, max_outputs=25, step=step)
+```
+上面是一张一张显示图片，如果想把多张图片拼在一起显示，可以使用以下代码
+```python
+def plot_to_image(figure):
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png")
+    plt.close(figure)
+    buf.seek(0)
+    image = tf.image.decode_png(buf.getvalue(), channels=4)
+    image = tf.expand_dims(image, 0)
+    return image
+
+def image_grid(images):
+    figure = plt.figure(figsize=(10, 10))
+    for i in range(25):
+        plt.subplot(5, 5, i + 1, title="name")
+        plt.xticks([])
+        plt.yticks([])
+        plt.grid(False)
+        plt.imshow(images[i], cmap=plt.cm.binary)
+
+    return figure
+
+
+val_images = x[:25]
+
+with summary_writer.as_default():
+    val_images = tf.reshape(val_images, [-1, 28, 28])
+    figure = image_grid(val_images)
+    tf.summary.scalar("test-acc", float(loss_cs), step=step)
+    tf.summary.image("val-grid-images", plot_to_image(figure), step=step)
+```
