@@ -92,12 +92,12 @@ model.build(input_shape=[None, 28*28])
 model.summary()
 optimizers = optimizers.Adam(lr=0.001)
 
-# sample_img = next(iter(train_db))[0]
-# sample_img = sample_img[0]
-# sample_img = tf.reshape(sample_img, [1, 28, 28, 1])
-#
-# with summary_writer.as_default():
-#     tf.summary.image("train example", sample_img, step=0)
+sample_img = next(iter(train_db))[0]
+sample_img = sample_img[0]
+sample_img = tf.reshape(sample_img, [1, 28, 28, 1])
+
+with summary_writer.as_default():
+    tf.summary.image("train example", sample_img, step=0)
 
 
 for epoch in range(10):
