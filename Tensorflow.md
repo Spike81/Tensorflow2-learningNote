@@ -865,3 +865,33 @@ with summary_writer.as_default():
     tf.summary.scalar("test-acc", float(loss_cs), step=step)
     tf.summary.image("val-grid-images", plot_to_image(figure), step=step)
 ```
+
+## tf.keras
+### metrics
+可以将每次得到的 loss 值 或 准确率 求均值，以显示 model 的性能变化
+```python
+acc_meter = metrics.Accuracy()  # 用于 train
+loss_meter = metrics.Mean()  # 用于 test
+
+loss_meter.update_state(loss)
+acc_meter.update_state(y, pred)
+
+if step % 100 == 0:
+    print(step, 'loss:', loss_meter.result().numpy())
+    loss_meter.reset_states()  # 清空之前的值
+
+if step % 100 == 0:
+    print(step, 'Evaluate Acc:', total_correct / total, acc_meter.result().numpy())
+    acc_meter.reset_states()
+```
+
+### compile & fit
+每次 train 的步骤大致相同，因此使用 compile 可以更方便的进行 train
+```python
+network.compile(optimizer=optimizers.Adam(lr=0.01),
+               loss=tf.losses.CategoricalCrossentropy(from_logits=True),
+               metrics=['accuracy'])
+network.fit(db, epochs=10, validation_data=ds_val, validation_freq=2)
+
+network.evaluate(ds_val)
+```

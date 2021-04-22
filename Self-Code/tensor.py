@@ -9,7 +9,7 @@ import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 import tensorflow as tf
-from tensorflow.keras import layers
+from tensorflow.keras import layers, Sequential, optimizers, datasets
 gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
 tf.config.experimental.set_virtual_device_configuration(
     gpus[0],
@@ -19,6 +19,3 @@ tf.config.experimental.set_virtual_device_configuration(
 import numpy as np
 from math import e
 
-x = tf.random.normal([256])
-net = tf.keras.layers.Dense(x)
-net.build(input_shape=(None, 20))
