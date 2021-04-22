@@ -895,3 +895,28 @@ network.fit(db, epochs=10, validation_data=ds_val, validation_freq=2)
 
 network.evaluate(ds_val)
 ```
+
+## 模型的保存和加载
+### save/load weights
+只保存参数（weights），适合在有源代码的情况下使用
+```python
+# 保存 model
+network.save_weights("weights.ckpt")
+
+# 加载 model 前，先要使用 Sequential 创建 model 结构
+network.load_weights("weights.ckpt")
+loss, acc = network.evaluate(test_image, test_label)
+```
+
+### save/load model
+直接把 model 的所有东西都保存下来
+```python
+network.save('model.h5')
+
+network = tf.keras.models.load_model('model/model.h5', compile=False)
+```
+
+### saved_model
+不给源码，可以供其他语言使用，常用于工业
+```python
+

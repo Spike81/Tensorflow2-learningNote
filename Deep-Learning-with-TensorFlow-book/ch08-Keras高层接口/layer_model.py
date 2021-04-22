@@ -28,13 +28,13 @@ sample = next(iter(db))
 print(sample[0].shape, sample[1].shape)
 
 
-network = Sequential([layers.Dense(256, activation='relu'),
-                     layers.Dense(128, activation='relu'),
-                     layers.Dense(64, activation='relu'),
-                     layers.Dense(32, activation='relu'),
-                     layers.Dense(10)])
-network.build(input_shape=(None, 28*28))
-network.summary()
+# network = Sequential([layers.Dense(256, activation='relu'),
+#                      layers.Dense(128, activation='relu'),
+#                      layers.Dense(64, activation='relu'),
+#                      layers.Dense(32, activation='relu'),
+#                      layers.Dense(10)])
+# network.build(input_shape=(None, 28*28))
+# network.summary()
 
 
 class MyDense(layers.Layer):
