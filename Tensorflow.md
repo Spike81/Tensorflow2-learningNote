@@ -919,4 +919,12 @@ network = tf.keras.models.load_model('model/model.h5', compile=False)
 ### saved_model
 不给源码，可以供其他语言使用，常用于工业
 ```python
+tf.saved_model.save(network, "saved_model/")
+print('saved total model.')
+del network
 
+network = tf.saved_model.load("saved_model/")
+f = network.signatures["serving_default"]
+print(f(tf.reshape(tf.cast(x_val[0], dtype=tf.float32), [-1, 28*28])))
+print(y_val[0])
+```

@@ -63,8 +63,7 @@ print('saved total model.')
 del network
 
 network = tf.saved_model.load("saved_model/")
-# f = network.signatures["serving_default"]
-# print(f(x=tf.constant([[1.]])))
-# # print("fsdfdsf")
-pruned = network.prune("x:0", "out:0")
-print(pruned(tf.ones([])))
+f = network.signatures["serving_default"]
+print(f(tf.reshape(tf.cast(x_val[50], dtype=tf.float32), [-1, 28*28])))
+print(y_val[50])
+
