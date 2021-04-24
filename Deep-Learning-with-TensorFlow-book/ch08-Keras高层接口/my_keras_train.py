@@ -50,7 +50,7 @@ class MyNetwork(keras.Model):
         self.fc4 = MyDense(256, 256)
         self.fc5 = MyDense(256, 10)
 
-    def call(self, inputs, training=None):
+    def call(self, inputs, training=None, mask=None):
         x = tf.reshape(inputs, [-1, 32*32*3])
         x = self.fc1(x)
         x = tf.nn.relu(x)
