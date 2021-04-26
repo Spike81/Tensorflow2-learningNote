@@ -928,3 +928,13 @@ f = network.signatures["serving_default"]
 print(f(tf.reshape(tf.cast(x_val[0], dtype=tf.float32), [-1, 28*28])))
 print(y_val[0])
 ```
+## 数据
+### train-val-test
+一般将 train 部分的数据划分为 train 和 validation
+```python
+(x, y), (x_test, y_test) = datasets.mnist.load_data()
+
+x_train, x_val = tf.split(x, num_or_size_splits=[50000, 10000])
+y_train, y_val = tf.split(y, num_or_size_splits=[50000, 10000])
+print(x_train.shape, x_val.shape)  # (50000, 28, 28) (10000, 28, 28)
+```
