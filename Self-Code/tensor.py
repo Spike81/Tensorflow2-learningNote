@@ -19,8 +19,4 @@ tf.config.experimental.set_virtual_device_configuration(
 import numpy as np
 from math import e
 
-(x, y), (x_test, y_test) = datasets.mnist.load_data()
 
-x_train, x_val = tf.split(x, num_or_size_splits=[50000, 10000])
-y_train, y_val = tf.split(y, num_or_size_splits=[50000, 10000])
-print(x_train.shape, x_val.shape)  # (50000, 28, 28) (10000, 28, 28)

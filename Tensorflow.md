@@ -938,3 +938,16 @@ x_train, x_val = tf.split(x, num_or_size_splits=[50000, 10000])
 y_train, y_val = tf.split(y, num_or_size_splits=[50000, 10000])
 print(x_train.shape, x_val.shape)  # (50000, 28, 28) (10000, 28, 28)
 ```
+### 交叉验证
+每次 train 和 val 都使用不同的数据进行
+```python
+for epoch in range(10):
+    idx = tf.range(60000)
+    idx = tf.random.shuffle(idx)
+    x_train, y_train = tf.gather(x, idx[:50000]),tf.gather(y, idx[:50000])
+    x_val, y_val = tf.gather(x, idx[-10000:]),tf.gather(y, idx[-10000:])
+```
+或者使用 keras fit 中的 validation_split
+```python
+network.fit(train_db, epochs=10, validation_split=0.1, validation_freq=2)  # 0.1 意味着会将 10% 的数据集作为 val
+```
