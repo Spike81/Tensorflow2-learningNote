@@ -954,6 +954,7 @@ network.fit(train_db, epochs=10, validation_split=0.1, validation_freq=2)  # 0.1
 ### regularization
 防止 overfitting，将参数的范数约束在较小的值，keras.regularizers
 ```python
+# 这里是对单个 layer 进行 regularization
 l2_model = Sequential([
     layers.Dense(16, kernel_regularizer=keras.regularizers.l2(0.001), 
                  activation=tf.nn.relu, input_shape=(NUM_WORDS,)), 
@@ -961,4 +962,25 @@ l2_model = Sequential([
                  activation=tf.nn.relu), 
     layers.Dense(1)
 ])
+```
+```python
+for step, (x, y) in enumerate(train_dataset):
+    with tf.GradientTape() as tape:
+        x = tf.reshape(x, (-1, 28*28))
+        out = model(x) 
+
+        loss = tf.reduce_sum(tf.losses.categorical_crossentropy(y, out, from_logits=True)) 
+
+        loss_regularization = []
+
+        for p in model.trainable_variables:
+            loss_regularization.append(tf.nn.l2_loss(p))
+
+        loss_regularization = tf.reduce_sum(tf.stack(loss_regularization))
+
+        loss = loss + 0.0001 * loss_regularization
+
+
+    grads = tape.gradient(loss, model.trainable_variables)
+    optimizer.apply_gradients(zip(grads, model.trainable_variables))
 ```
