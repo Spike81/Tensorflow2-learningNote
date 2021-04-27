@@ -28,7 +28,10 @@ y_train = tf.one_hot(y_train, depth=10)  # depth is the category num
 train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(200)
 
 model = Sequential([layers.Dense(512, activation="relu"),
+                    layers.Dropout(0,5),
                     layers.Dense(256, activation="relu"),
+                    layers.Dropout(0.5),
+                    layers.Dense(64, activation="relu"),
                     layers.Dense(10)])
 
 optimizer = optimizers.SGD(learning_rate=0.001)  # update parameters w and b automatically
@@ -43,7 +46,7 @@ for epoch in range(100):
 
         with tf.GradientTape() as tape:
             x = tf.reshape(x, (-1, 28*28))  # make it one-dis
-            out = model(x)  # get result
+            out = model(x, training=True)  # get result
 
             loss = tf.reduce_sum(tf.losses.categorical_crossentropy(y, out, from_logits=True))  # calculate loss, x.shape[0] = 200
 

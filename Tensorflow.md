@@ -1001,3 +1001,26 @@ for epoch in range(100):
     optimizer.learning_rate = 0.001 * (100 - epoch) / 100
     print(optimizer.learning_rate)
 ```
+### Dropout
+为了防止 overfitting，需要减少训练时的参数量，来降低模型的复杂度。
+dropout 会在 train 的过程中按一点概率让某个参数输出为 0（断连）。
+```python
+model = Sequential([layers.Dense(512, activation="relu"),
+                    layers.Dropout(0,5),
+                    layers.Dense(256, activation="relu"),
+                    layers.Dropout(0.5),
+                    layers.Dense(64, activation="relu"),
+                    layers.Dense(10)])
+
+# dropout 只有在 train 时需要，test 时不需要，因此要区分一下当前是 train 还是 test
+for step, (x, y) in enumerate(train_dataset):
+    with tf.GradientTape() as tape:
+        x = tf.reshape(x, (-1, 28*28))
+        out = model(x, training=True)  # train 时设为 True
+
+	out = model(x, training=False)  # test 时设为 False
+```
+
+### Stochastic gradient descent
+以前的 loss 需要把整个数据集的 gradient 做均值，这样硬件内存不够。
+Stochastic gradient descent 从当前的数据集中随机 sample 出一个 batch，将这个 batch 的 gradient 做均值。
