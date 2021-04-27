@@ -951,3 +951,14 @@ for epoch in range(10):
 ```python
 network.fit(train_db, epochs=10, validation_split=0.1, validation_freq=2)  # 0.1 意味着会将 10% 的数据集作为 val
 ```
+### regularization
+防止 overfitting，将参数的范数约束在较小的值，keras.regularizers
+```python
+l2_model = Sequential([
+    layers.Dense(16, kernel_regularizer=keras.regularizers.l2(0.001), 
+                 activation=tf.nn.relu, input_shape=(NUM_WORDS,)), 
+    layers.Dense(16, kernel_regularizer=keras.regularizers.l2(0.001), 
+                 activation=tf.nn.relu), 
+    layers.Dense(1)
+])
+```
