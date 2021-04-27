@@ -984,3 +984,20 @@ for step, (x, y) in enumerate(train_dataset):
     grads = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(grads, model.trainable_variables))
 ```
+
+### 动量与学习率
+动量：在更新参数的时候，考虑过去因素的影响
+```python
+optimizer = optimizers.SGD(lr=0.01, momentum=0.9)
+optimizer = optimizers.RMSprop(lr=0.01, momentum=0.9)
+optimizer = optimizers.Adam(lr=0.01, beta_1=0.9, beta_2=0.999)
+```
+learning rate：让 lr 随着 train 逐渐变小
+```python
+optimizer = optimizers.SGD(learning_rate=0.001)  # update parameters w and b automatically
+
+for epoch in range(100):
+
+    optimizer.learning_rate = 0.001 * (100 - epoch) / 100
+    print(optimizer.learning_rate)
+```

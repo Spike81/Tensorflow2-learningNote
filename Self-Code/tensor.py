@@ -33,7 +33,10 @@ model = Sequential([layers.Dense(512, activation="relu"),
 
 optimizer = optimizers.SGD(learning_rate=0.001)  # update parameters w and b automatically
 
-for i in range(1):
+for epoch in range(100):
+    print(float(optimizer.learning_rate))
+    optimizer.learning_rate = 0.001 * (100 - epoch) / 100
+
 
     for step, (x, y) in enumerate(train_dataset):  # loop 300 times, one batch (200 pic) per time
         # print(step, x.shape, y.shape)
