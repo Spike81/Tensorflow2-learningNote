@@ -1024,3 +1024,43 @@ for step, (x, y) in enumerate(train_dataset):
 ### Stochastic gradient descent
 以前的 loss 需要把整个数据集的 gradient 做均值，这样硬件内存不够。
 Stochastic gradient descent 从当前的数据集中随机 sample 出一个 batch，将这个 batch 的 gradient 做均值。
+
+
+## 卷积神经网络
+### 卷积操作
+```python
+# Conv2D 中，4 代表有 4 个卷积核，kernel_size 代表 w 的 shape，strides 代码卷积核移动的步长，padding 代码是否对原 tensor 进行 padding
+layer = layers.Conv2D(4, kernel_size=5, strides=1, padding="valid")
+out = layer(tf.random.normal([1, 32, 32, 3]))
+print(out.shape)  # (1, 28, 28, 4)
+
+layer = layers.Conv2D(4, kernel_size=5, strides=1, padding="same")
+out = layer(tf.random.normal([1, 32, 32, 3]))
+print(out.shape)  # (1, 32, 32, 4)
+```
+
+### 池化和采样
+#### 下采样（池化）
+分为 max pool 和 average pool，使用类似卷积的操作，使用卷积核将原 tensor 的数据变少
+```python
+x = tf.random.normal([1, 14, 14, 4])
+pool = layers.MaxPool2D(pool_size=2, strides=2)
+out = pool(x)
+print(out.shape)  # (1, 7, 7, 4)
+
+pool = layers.MaxPool2D(pool_size=3, strides=2)
+out = pool(x)
+print(out.shape)  # (1, 6, 6, 4)
+
+out = tf.nn.max_pool2d(x, ksize=2, strides=2, padding="VALID")
+print(out.shape)  # (1, 7, 7, 4)
+```
+
+#### 上采样
+使用复制，将原 tensor 的数据变多
+```python
+x = tf.random.normal([1, 7, 7, 4])
+layer = layers.UpSampling2D(size=3)  # 变为原来 3 倍
+print(layer(x).shape)  # (1, 21, 21, 4)
+```
+
