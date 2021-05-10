@@ -1064,3 +1064,4 @@ layer = layers.UpSampling2D(size=3)  # 变为原来 3 倍
 print(layer(x).shape)  # (1, 21, 21, 4)
 ```
 
+### Batch Normalization
