@@ -56,7 +56,7 @@ for epoch in range(10):
 
     for step, (x, y) in enumerate(train_db):
 
-        # print(x.shape)
+        print(x.shape)
 
         # for (x, y) in train_db:
         x = tf.reshape(x, [-1, 28*28])
