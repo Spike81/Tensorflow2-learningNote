@@ -11,6 +11,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
 from tensorflow.keras import layers, Sequential, optimizers, datasets
 from tensorflow import keras
+
 gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
 tf.config.experimental.set_virtual_device_configuration(
     gpus[0],
