@@ -20,8 +20,3 @@ tf.config.experimental.set_virtual_device_configuration(
 
 import numpy as np
 from math import e
-
-
-out = tf.random.normal([1, 1, 512])
-out = tf.squeeze(out)
-print(out.shape)
